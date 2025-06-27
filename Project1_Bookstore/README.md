@@ -1,5 +1,11 @@
 # 📚 Bookstore API – Project 1
 
+**Author**: My Lu  
+**Date**: June 26, 2025  
+**Tech Stack**: FastAPI, PostgreSQL, SQLAlchemy, Postman  
+
+---
+
 This is a RESTful API built using **FastAPI** and **SQLAlchemy** to manage a digital bookstore. It supports full CRUD (Create, Read, Update, Delete) operations for books stored in a PostgreSQL database.
 
 ---
