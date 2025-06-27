@@ -8,6 +8,8 @@
 
 This is a RESTful API built using **FastAPI** and **SQLAlchemy** to manage a digital bookstore. It supports full CRUD (Create, Read, Update, Delete) operations for books stored in a PostgreSQL database.
 
+- [Demo Video](https://www.loom.com/share/97f5eacf27344f089c52a5fa96625595?sid=001f325f-e2a0-4c0c-808f-f1255906d7d8)
+- [Project Report](https://docs.google.com/document/d/1iR3qdNHw-duEsGRtgcEELMojaHSQxMDW93NZwPv6Euc/edit?usp=sharing)
 ---
 
 ## 🚀 Features
