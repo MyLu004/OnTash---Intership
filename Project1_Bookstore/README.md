@@ -99,6 +99,6 @@ Defines a  `Book` model mapped to the `bookstore` table with fields like `id`, `
 
 ## Author
 My Lu  
-Intern @ OnStach  
+Intern @ Ontash  
 Email: myluwork004@gmail.com  
 Github : https://github.com/MyLu004 
