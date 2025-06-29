@@ -33,8 +33,9 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), curr_u
 
     # new_post = cursor.fetchone()  #fetch the newly created post
     # conn.commit()  #commit the changes to the database
-    print("this is curr user:", curr_user.email)  #print the current user's email to the console
-    new_posts = models.Post(**post.dict())  #create a new post object
+    
+    print("current user id",curr_user.id)  #print the current user's email to the console
+    new_posts = models.Post(owner_id = curr_user.id, **post.dict())  #create a new post object
      
     db.add(new_posts)  #add the new post to the database session
     db.commit()  #commit the changes to the database
@@ -83,7 +84,7 @@ def delete_post(id: int, db: Session = Depends(get_db), curr_user: int = Depends
 
 
 
-@router.put("/{id}", response_model=schemas.PostUpdate)  #set the response model to Post schema    
+@router.put("/{id}", response_model=schemas.Post)  #set the response model to Post schema    
 def update_post(id: int, post: schemas.PostUpdate, db: Session = Depends(get_db), curr_user: int = Depends(oauth2.get_current_user)):
 
     # cursor.execute(

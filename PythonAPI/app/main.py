@@ -43,9 +43,6 @@ app = FastAPI()
 #title str, content str
 
 
-
-
-
 while True:
     #try to connect to the database
     try:

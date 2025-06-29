@@ -19,6 +19,8 @@ class PostUpdate(PostBase):
 class Post(PostBase):
     id : int
     create_at: datetime  #using str for datetime, can be changed to datetime if needed
+    owner_id: int  #owner_id is the id of the user who created the post
+
 
     class Config:
         orm_mode = True
