@@ -5,12 +5,13 @@
 **Tech Stack**: `python-jose` (JWT), `OAuth2`, `bearer`, `passlib[bcrypt]`
 
 
+### 📌 Overview
 This module add secure ***user authentication*** features to a FastAPI-based application. It allows readers to register and log in using email and password credentials. Once authenticated, readers receive a  ***JWT token*** which must be provided as ***Bearer*** token to access protected endpoints.
 
 - Demo Video
 - Project Report
 
-## Features
+## ✨ Features
 - `/register`: Accepts new user credentials and stores hashed passwords.  
 
 - `/login`: Validates user credentials and returns a JWT token.  
@@ -68,18 +69,20 @@ Authorization: Bearer <token>
 
     - Load the reader from the DB using reader_id.
 
+## 📁 Folder Structure Overview
 
 ``` 
-project/
-├── app/
-│   ├── routes/
-│   │   ├── auth.py       # Handles login and token generation
-│   │   ├── reader.py     # Uses token to fetch user
-│   │   └── books.py      # Protected book routes
-│   ├── oauth2.py         # JWT handling and token verification
-│   ├── utils.py          # Password hashing & verification
-│   ├── schemas.py        # Pydantic models
-│   └── models.py         # SQLAlchemy models
+app/
+├── routes/
+│   ├── auth.py         # Login route using OAuth2
+│   ├── books.py        # Protected book endpoints
+│   └── reader.py       # User registration and retrieval
+├── oauth2.py           # Token creation, verification, and user auth
+├── utils.py            # Password hashing and verification
+├── database.py         # DB setup and session handling
+├── schemas.py          # Pydantic models for request/response
+├── models.py           # SQLAlchemy ORM models
+└── main.py             # FastAPI app instance and router includes
 
 ```
 
@@ -106,7 +109,15 @@ Authorization: Bearer {{access_token}}
 ```
 
 ---
-## RESOURCE
+## 🔗 RESOURCE
 - [Study JWT](https://youtu.be/7Q17ubqLfaM)
 - [FastAPI Security Documentation](https://fastapi.tiangolo.com/tutorial/security/ ) 
 - [OAuth2 with Password and hasing]( https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)
+
+
+## Author
+**My Lu**  
+Intern @ Ontash  
+Email: myluwork004@gmail.com
+LinkedIn : www.linkedin.com/in/my-lu  
+Github : https://github.com/MyLu004 

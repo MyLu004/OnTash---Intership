@@ -98,7 +98,9 @@ Defines a  `Book` model mapped to the `bookstore` table with fields like `id`, `
 - Containerize with Docker
 
 ## Author
-My Lu  
+**My Lu**  
 Intern @ Ontash  
-Email: myluwork004@gmail.com  
+Email: myluwork004@gmail.com
+LinkedIn : www.linkedin.com/in/my-lu  
 Github : https://github.com/MyLu004 
+
