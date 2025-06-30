@@ -38,13 +38,13 @@ This module add secure ***user authentication*** features to a FastAPI-based app
 ### Tech Stack
 
 
-| Category             | Tool/ Library |
-| -------------        | ------------- |
-|  Backend             | Fast API      |
+| Category             | Tool/ Library                               |
+| ---------------------| ------------------------------------------- |
+|  Backend             | Fast API                                    |
 |  Auth                |    `python-jose` (JWT), `OAuth2`, `bearer`  |
-|  Password Hashing    |    `passlib[bcrypt]`|
-|  DB ORM              | SQLAlchemy | 
-| Testing Tool         | Postman |
+|  Password Hashing    |    `passlib[bcrypt]`                        |
+|  DB ORM              | SQLAlchemy                                  | 
+| Testing Tool         | Postman                                     |
 
 
 ### Authentication Flow
@@ -59,10 +59,11 @@ This module add secure ***user authentication*** features to a FastAPI-based app
 
     - Returns the token and token_type = "bearer".
 3. Cleint stores the token
-4. To access protected endpoints, client adds:
+4. To access protected endpoints, client adds:  
 ``` 
 Authorization: Bearer <token>
 ```
+
 5. FastAPI uses get_current_reader() to:
 
     - Decode and verify token.
@@ -83,7 +84,6 @@ app/
 ├── schemas.py          # Pydantic models for request/response
 ├── models.py           # SQLAlchemy ORM models
 └── main.py             # FastAPI app instance and router includes
-
 ```
 
 ## EXAMPLE

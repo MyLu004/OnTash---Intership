@@ -90,7 +90,9 @@ Defines a  `Book` model mapped to the `bookstore` table with fields like `id`, `
 </pre>
 
 - Visit the localhost url : http://127.0.0.1:8000/docs 
-- To view the UI or paste the url in the postman to do the API request
+- To view the UI or paste the url in the postman to do the API request  
+  
+
 
 ## FUTURE IMPROVEMENT
 - Add user authentication
