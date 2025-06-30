@@ -58,7 +58,7 @@ def verify_access_token(token: str, credentials_exception):
         id:str = payload.get("reader_id") # Ensure 'reader_id' is in the payload
 
         if id is None:
-            raise credentials_exception
+            raise credentials_exception 
         
         token_data = schemas.TokenData(id=id)
 
@@ -83,6 +83,8 @@ def get_current_reader(token: str = Depends(oauth2_scheme),db: Session = Depends
     Raises:
         credentials_exception: If the token is invalid or expired.
     """
+
+    # Raise an exception if the token is invalid or expired
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -91,7 +93,9 @@ def get_current_reader(token: str = Depends(oauth2_scheme),db: Session = Depends
 
     token = verify_access_token(token, credentials_exception)
 
-    reader = db.query(models.Reader).filter(models.Reader.id == token.id).first()  # Fetch the user from the database using the ID from the token
+
+    # Fetch the user from the database using the ID from the token
+    reader = db.query(models.Reader).filter(models.Reader.id == token.id).first()  
     if reader is None:
         raise credentials_exception
     

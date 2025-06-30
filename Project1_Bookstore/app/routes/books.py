@@ -2,7 +2,7 @@
 # File: Project1_Bookstore/app/main.py
 # Project 1 Bookstore API
 
-#Project 1 Bookstore API : requirements
+#requirements
 # 1. Create a book
 # 2. Get all books
 # 3. Get a book by ID
