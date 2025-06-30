@@ -8,8 +8,8 @@
 ### 📌 Overview
 This module add secure ***user authentication*** features to a FastAPI-based application. It allows readers to register and log in using email and password credentials. Once authenticated, readers receive a  ***JWT token*** which must be provided as ***Bearer*** token to access protected endpoints.
 
-- Demo Video
-- Project Report
+- [Demo Video](https://www.loom.com/share/8f4674fc56424e388f40215345711274)
+- [Project Report](https://docs.google.com/document/d/14iMivW7kQ8oGk949l58xGo6NoSnPl8LKFSgciGZBmNg/edit?usp=sharing)
 
 ## ✨ Features
 - `/register`: Accepts new user credentials and stores hashed passwords.  
