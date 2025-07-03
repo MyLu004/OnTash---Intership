@@ -1,4 +1,4 @@
-# 📚 Bookstore API – Project 1
+# 📚 Project 1 : Bookstore API 
 
 **Author**: My Lu  
 **Date**: June 26, 2025  
