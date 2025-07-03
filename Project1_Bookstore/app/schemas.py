@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, conint
 from datetime import datetime 
 
 
@@ -24,11 +24,11 @@ class BookOut(BookBase):
 
 #SCHEMA FOR READER OBJECTS
 class ReaderBase(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class ReaderCreate(BaseModel):
-    email: str
+    email: EmailStr
     password: str
    
 
@@ -53,3 +53,16 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: int | None = None  # id can be None if not provided, using union type for optional id
     email: str | None = None  # email can also be None if not provided, using union type for optional email
+
+
+class Vote(BaseModel):
+    book_id: int
+    #user_id: int
+
+    dir : conint (le=1)
+
+    class Config:
+        orm_mode = True
+
+class VoteOut(Vote):
+    pass

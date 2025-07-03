@@ -20,7 +20,7 @@ from psycopg2.extras import RealDictCursor
 
 
 #import the routers
-from .routes import books, reader, auth
+from .routes import books, reader, auth, vote
 
 #create an instance of FastAPI | initialize the database
 app = FastAPI()
@@ -60,7 +60,7 @@ while True:
 app.include_router(books.router)  #include the books router
 app.include_router(reader.router)  #include the reader router
 app.include_router(auth.router)  #include the auth router
-
+app.include_router(vote.router)
 
 
 

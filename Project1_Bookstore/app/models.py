@@ -18,7 +18,7 @@ class Book(Base):
     create_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)  #define the create_at column as a timestamp with a default value of the current time
     owner_id = Column(Integer,ForeignKey("readers.id", ondelete="CASCADE") ,nullable=False)  #define the owner_id column as an integer and not nullable, this will be used to link the book to the reader who created it
 
-
+    owner = relationship("Reader")
 
 
 #model for reader table in the database
@@ -32,3 +32,16 @@ class Reader(Base):
     password = Column(String, nullable=False)  #define the password column as a string and not nullable
     
     create_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)  #define the create_at column as a timestamp with a default value of the current time
+
+
+class Vote(Base):
+    __tablename__ = "vote"  #specify the table name
+
+    book_id = Column(Integer, ForeignKey("bookstore.id", ondelete="CASCADE"), primary_key=True)  #define the post_id column as an integer and primary key, this will be used to link the voter to the post they voted for
+    reader_id = Column(Integer, ForeignKey("readers.id", ondelete="CASCADE"), primary_key=True)  #define the user_id column as an integer and primary key, this will be used to link the voter to the user who voted
+
+    # Define a relationship with the Post model
+    post = relationship("Book")  #define a relationship with the Book model, this will allow us to access the post that was voted for
+
+    # Define a relationship with the User model
+    user = relationship("Reader")  #define a relationship with the Reader model, this will allow us to access the user who voted
