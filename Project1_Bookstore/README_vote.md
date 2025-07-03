@@ -27,101 +27,100 @@ This project implements a full feature **Voting System API** using **FastAPI** a
 - **Alembic** – (optional) For database migrations
 
 ---
-### What I Learned
-- JWT (JSON Web Token) : to securely encode user identify and expiration  
 
-- OAuth2PasswordRequestForm : for parsing login credentials from `x-www-form-urlencoded` input  
+## 📁 Features
 
-- OAuth2PasswordBearer : for protecting routes and auto-extracting tokens from Authorization headers  
+### ✅ Voting Functionality
+- Users can like/vote on a post **only once**.
+- Users **cannot vote** on their own post.
+- Duplicate votes are **blocked** with appropriate error responses.
+- Votes can be **removed** by the user.
 
-- FastAPI Depends() : for dependency injection of form data, database sessions, and auth logic
+### 🔐 Post Ownership
+- Users can only **update** or **delete** their own posts.
+- Unauthorized actions return 403 Forbidden errors.
 
-- Postman scripting  : for auto-setting `access_token` after login and reusing it in headers for authenticated routes.
+### 📊 Optimized Queries
+- Vote counts per post are retrieved using:
+  - `JOIN` with the votes table
+  - `func.count()` and `group_by()` for aggregation
+- Includes **pagination**, **limit**, **skip**, and **search** filtering via query parameters.
 
 ---
-### Tech Stack
+## 📄 API Endpoints Overview
 
+### 🔓 Auth (JWT Token-based)
+- `POST /login`: Authenticate and get access token
 
-| Category             | Tool/ Library                               |
-| ---------------------| ------------------------------------------- |
-|  Backend             | Fast API                                    |
-|  Auth                |    `python-jose` (JWT), `OAuth2`, `bearer`  |
-|  Password Hashing    |    `passlib[bcrypt]`                        |
-|  DB ORM              | SQLAlchemy                                  | 
-| Testing Tool         | Postman                                     |
+### 📚 Posts
+- `GET /posts`: List all posts with vote counts (supports search, limit, skip)
+- `GET /posts/{id}`: Get a single post by ID with vote count
+- `POST /posts`: Create a new post (auth required)
+- `PUT /posts/{id}`: Update a post (owner only)
+- `DELETE /posts/{id}`: Delete a post (owner only)
 
+### 👍 Voting
+- `POST /vote`: Like/unlike a post
+  - Requires: `book_id`, `dir` (1 to like, 0 to unlike)
+  - Handles errors for duplicate votes, non-existent posts, and self-votes
 
-### Authentication Flow
-1. User logs in via /login with email & password.
+---
+## 🔑 Environment Variables
 
-2. FastAPI:
-    - Looks up the user by email.
+Add a `.env` file to the root directory with the following variables:
 
-    - Verifies the password hash with passlib.
+```
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 
-    - If valid, creates a JWT with reader_id and expiration.
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=your_db_name
 
-    - Returns the token and token_type = "bearer".
-3. Cleint stores the token
-4. To access protected endpoints, client adds:  
-``` 
-Authorization: Bearer <token>
 ```
 
-5. FastAPI uses get_current_reader() to:
+## GETITNG STARTED
+1. **Clone the Repo**:
+``` bash 
 
-    - Decode and verify token.
-
-    - Load the reader from the DB using reader_id.
-
-## 📁 Folder Structure Overview
-
-``` 
-app/
-├── routes/
-│   ├── auth.py         # Login route using OAuth2
-│   ├── books.py        # Protected book endpoints
-│   └── reader.py       # User registration and retrieval
-├── oauth2.py           # Token creation, verification, and user auth
-├── utils.py            # Password hashing and verification
-├── database.py         # DB setup and session handling
-├── schemas.py          # Pydantic models for request/response
-├── models.py           # SQLAlchemy ORM models
-└── main.py             # FastAPI app instance and router includes
+git clone https://github.com/your-username/voting-api.git
+cd voting-api
 ```
 
-## EXAMPLE
-Login:
-- Method: `POST`
-- URL: `/login`
-- Body: `x-www-form-urlencoded`      
-  
- 
-``` 
-username: email@example.com
-password: yourpassword
+2. **Set up virtual enviroment**
+``` bash
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 ```
 
-Token Auto-Extraction in Postman Tests Tab:
-```javascript 
-const res = pm.response.json(); pm.environment.set("access_token", res.access_token);
+3. **Install dependencies**
+``` bash
+pip install -r requirements.txt
 ```
 
-Authorization Header for protected routes
-```
-Authorization: Bearer {{access_token}}
+4. **Run the API**
+``` bash 
+uvicorn app.main:app --reload
+
 ```
 
 ---
-## 🔗 RESOURCE
-- [Study JWT](https://youtu.be/7Q17ubqLfaM)
-- [FastAPI Security Documentation](https://fastapi.tiangolo.com/tutorial/security/ ) 
-- [OAuth2 with Password and hasing]( https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)
+## What I Leanred:
+- Validating ownership and access control
+- Building voting systems with unique constraints and composite keys.
+- Performing JOINs and aggregations with SQLAchemy
+- Desinging scalable and RESTful API end points
+- Using Postman for API test
+-- Structing a FastAPI project into modular routers and services
+
 
 
 ## Author
 **My Lu**  
 Intern @ Ontash  
-Email: myluwork004@gmail.com
+Email: myluwork004@gmail.com  
 LinkedIn : www.linkedin.com/in/my-lu  
 Github : https://github.com/MyLu004 
