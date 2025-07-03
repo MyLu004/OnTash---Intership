@@ -64,6 +64,24 @@ This project implements a full feature **Voting System API** using **FastAPI** a
   - Requires: `book_id`, `dir` (1 to like, 0 to unlike)
   - Handles errors for duplicate votes, non-existent posts, and self-votes
 
+
+## 📁 Folder Structure Overview
+
+``` 
+app/
+├── routes/
+│   ├── auth.py         # Login route using OAuth2
+│   ├── books.py        # Protected book endpoints
+│   ├── reader.py       # User registration and retrieval
+│   └── vote.py         # Vote functionality
+├── oauth2.py           # Token creation, verification, and user auth
+├── utils.py            # Password hashing and verification
+├── database.py         # DB setup and session handling
+├── schemas.py          # Pydantic models for request/response
+├── models.py           # SQLAlchemy ORM models
+└── main.py             # FastAPI app instance and router includes
+```
+
 ---
 ## 🔑 Environment Variables
 
@@ -81,6 +99,9 @@ DB_PORT=5432
 DB_NAME=your_db_name
 
 ```
+
+
+
 
 ## GETITNG STARTED
 1. **Clone the Repo**:
