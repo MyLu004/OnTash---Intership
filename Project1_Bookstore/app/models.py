@@ -2,6 +2,7 @@ from  .database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql import text
+from sqlalchemy.orm import relationship
 
 
 #model for book table in the database
@@ -16,6 +17,7 @@ class Book(Base):
     genres = Column(String, nullable=False)  #define the genres column as a string and not nullable
     create_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)  #define the create_at column as a timestamp with a default value of the current time
     owner_id = Column(Integer,ForeignKey("readers.id", ondelete="CASCADE") ,nullable=False)  #define the owner_id column as an integer and not nullable, this will be used to link the book to the reader who created it
+
 
 
 
