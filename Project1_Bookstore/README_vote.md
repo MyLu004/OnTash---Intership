@@ -13,7 +13,7 @@ This project implements a full feature **Voting System API** using **FastAPI** a
 - Enforce that only the **book owner** can update or delete the book 
 
 
-- [Demo Video]()
+- [Demo Video](https://www.loom.com/share/e93fbad3b6f54e3ab77d6c22b35f6cd7?sid=128639a6-5f84-48b8-9610-2e4b723755df)
 - [Project Report](https://docs.google.com/document/d/1fOFSbPFd767ILrwKZC0wSJikoSD7kNX7QSBec4XpKZU/edit?usp=sharing)
 
 ## ⚙️ Technologies Used
