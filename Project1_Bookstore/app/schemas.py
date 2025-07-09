@@ -12,7 +12,7 @@ class BookBase(BaseModel):
     published: bool = True  # default value is True
 
 
-class BookCreate(BookBase):
+class BookCreate(BookBase): 
     pass
 
 class BookOut(BookBase):
