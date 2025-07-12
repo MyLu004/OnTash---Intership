@@ -13,7 +13,7 @@ function ModelSelector({ selectedModel, setSelectedModel }) {
         {selectedModel || "Select Model"} ▼
       </button>
       {open && (
-        <ul className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg z-10 w-full">
+        <ul className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg z-10 w-2/12">
           {models.map((model) => (
             <li
               key={model}

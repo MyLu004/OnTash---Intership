@@ -10,10 +10,21 @@ function ChatArea({ messages, input, setInput, handleSend }) {
   const [selectedModel, setSelectedModel] = useState("");
 
 
-  const handleFileUpload = (file) => {
-  // You could convert to base64, send to server, etc.
-  console.log("Uploaded file:", file);
-  };
+  const handleFileUpload = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    console.log("Upload response:", data);
+  } catch (err) {
+    console.error("File upload failed:", err);
+  }
+};
 
 
 
@@ -26,7 +37,7 @@ function ChatArea({ messages, input, setInput, handleSend }) {
         setSelectedModel={setSelectedModel}
       />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6  space-y-4">
         {messages.map((msg, i) => (
           <div
             key={i}

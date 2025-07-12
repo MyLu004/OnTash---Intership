@@ -26,7 +26,7 @@ function Login() {
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("accessToken", data.access_token);
       console.log("loggin successful, navigate to chat")
       navigate("/chat");
     } else {
