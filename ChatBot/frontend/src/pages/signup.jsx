@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { GiSuperMushroom } from "react-icons/gi";
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,11 +44,16 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-red-600">
+    <div className="min-h-screen w-screen flex items-center justify-center">
       <form
         onSubmit={handleSignup}
         className="bg-black p-8 rounded-2xl shadow-md w-full max-w-md space-y-4"
       >
+
+        <div className="flex items-center justify-center">
+          <GiSuperMushroom className="text-4xl text-white-500" />
+        </div> 
+
         <h2 className="text-2xl font-bold text-center text-white">Sign Up</h2>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
@@ -82,7 +87,7 @@ function Signup() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-[var(--color-accent)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover)] transition"
         >
           Sign Up
         </button>
