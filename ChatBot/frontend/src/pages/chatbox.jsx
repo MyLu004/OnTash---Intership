@@ -65,6 +65,27 @@ function Chatbot() {
     setInput("");
   };
 
+  const handleDeleteChat = (chatId) => {
+  const updated = chats.filter(c => c.id !== chatId);
+  setChats(updated);
+
+  if (activeChatId === chatId && updated.length > 0) {
+    setActiveChatId(updated[0].id);
+    } else if (updated.length === 0) {
+      handleNewChat();
+    }
+  };
+
+const handleRenameChat = (chatId) => {
+  const newTitle = prompt("Enter new chat title:");
+  if (newTitle) {
+    setChats(prev =>
+      prev.map(chat =>
+        chat.id === chatId ? { ...chat, title: newTitle } : chat
+      ));
+    }
+  };
+
   const activeChat = chats.find((c) => c.id === activeChatId);
 
 
@@ -180,7 +201,9 @@ ${input}
         activeChatId={activeChatId}
         onNewChat={handleNewChat}
         onSelectChat={setActiveChatId}
-      />
+        onDeleteChat={handleDeleteChat}
+        onRenameChat={handleRenameChat}
+    />
       <ChatArea
         messages={activeChat?.messages || []}
         input={input}
