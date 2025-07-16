@@ -5,6 +5,13 @@ import { v4 as uuidv4 } from "uuid";
 
 //const title = "this is a title for content 1";
 
+const modelMap = {
+  "GPT-3.5": "gpt3.5",
+  "GPT-4": "gpt4",
+  "LLaMA-3": "llama3",
+  "Mistral": "mistral",
+};
+
 
 function Chatbot() {
   const [selectedModel, setSelectedModel] = useState("llama3");
@@ -78,8 +85,6 @@ function Chatbot() {
           : chat
       )
     );
-
-  
   
 
   //retrieve access token
@@ -100,7 +105,7 @@ function Chatbot() {
           },
           body: JSON.stringify({
             prompt: titlePrompt,
-            model:  selectedModel || "llama3",
+            model: modelMap[selectedModel] || "llama3",
           }),
         });
 
@@ -127,7 +132,8 @@ ${input}
 
 - Use **bold** for key terms
 - Use bullet points or numbered lists
-- Use line breaks between sections
+- Use line breaks between sections or bullet points
+- Use headers (###)
 - Use section headers with ###
 `;
 
@@ -142,12 +148,13 @@ ${input}
         },
         body: JSON.stringify({
           prompt: structuredPrompt,
-          model:  selectedModel || "llama3",
+          model: modelMap[selectedModel] || "llama3",
         }),
       });
 
       const data = await res.json();
-      const botMessage = { role: "bot", text: data.response };
+      console.log("Bot response: ", data)
+      const botMessage = { role: "bot", text: data.response || "⚠️ No response from model." };
 
       // Append bot response
       setChats((prev) =>

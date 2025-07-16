@@ -9,11 +9,11 @@ from .routes import user, auth, chat, upload
 
 
 
+
 models.Base.metadata.create_all(bind=engine) #create table 
 
 
 app = FastAPI()
-
 
 
 # Allow your frontend to talk to your backend
@@ -35,8 +35,6 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(chat.router) 
 app.include_router(upload.router) 
-
-
 
 
 

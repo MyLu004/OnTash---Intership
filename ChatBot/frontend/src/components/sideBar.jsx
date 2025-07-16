@@ -17,14 +17,21 @@ function Sidebar({ sidebarOpen, toggleSidebar, chats, activeChatId, onNewChat, o
 
       {/* Sidebar content when open */}
       {sidebarOpen && (
-        <div className="text-black mt-2 w-full p-3 space-y-4">
-          {/* New Chat Button */}
-          <button
-            onClick={onNewChat}
-            className="flex items-center gap-2 text-sm bg-white text-black font-semibold px-3 py-1 rounded-md hover:bg-yellow-200 transition"
-          >
-            <FaPlus /> New Chat
-          </button>
+        <div className="text-black mt-2 w-full py-3  space-y-4">
+
+          <div className="w-full relative flex flex-col justify-center items-start px-3 space-y-2">
+            {/* New Chat Button */}
+            <button
+              onClick={onNewChat}
+              className="flex  items-center gap-2 text-sm bg-white text-black font-semibold px-3 py-1 rounded-md hover:bg-yellow-200 transition"
+              >
+              <FaPlus /> New Chat
+              
+            </button>
+            
+          </div>
+
+          
 
           {/* Chat List */}
           {chats.length > 0 ? (
@@ -32,7 +39,7 @@ function Sidebar({ sidebarOpen, toggleSidebar, chats, activeChatId, onNewChat, o
               <div
                 key={chat.id}
                 onClick={() => onSelectChat(chat.id)}
-                className={`truncate text-sm py-1 px-3 cursor-pointer rounded-md transition 
+                className={` truncate text-sm py-2 px-3 cursor-pointer rounded-md transition 
                 ${chat.id === activeChatId ? "bg-yellow-200 font-bold" : "hover:bg-yellow-300"}`}
               >
                 {chat.title.slice(0, 30)}

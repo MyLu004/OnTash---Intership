@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 //import logo 
 import { GiSuperMushroom } from "react-icons/gi";
-
 
 function Login() {
   const [email, setEmail] = useState("");

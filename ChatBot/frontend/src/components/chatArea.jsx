@@ -1,6 +1,6 @@
 
 
-import { useState, useRef, useEffect } from "react";
+import {  useRef, useEffect } from "react";
 import ModelSelector from "../components/modelSelector"; // adjust path if needed
 import FileUpload from "../components/fileUpload"; // adjust path if needed
 
@@ -12,6 +12,7 @@ import DOMPurify from "dompurify";
 
 
 function parseMarkdown(text) {
+  if (!text) return "";
   return DOMPurify.sanitize(marked(text));
 }
 
@@ -50,7 +51,6 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
     bottomRef.current.scrollIntoView({ behavior: "smooth" });
   }
 }, [messages]);
-
 
 
   return (

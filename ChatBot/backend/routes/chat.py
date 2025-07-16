@@ -37,6 +37,8 @@ def chat_with_ollama(
 
         response.raise_for_status()
         ollama_response = response.json()
+        
+        print(f"Using model: {request.model}")
 
         return {"response": ollama_response["response"]}
 
