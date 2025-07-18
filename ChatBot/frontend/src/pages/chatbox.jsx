@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import ChatArea from "../components/chatArea";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
+import Sidebar from "../components/sidebar";
 import { v4 as uuidv4 } from "uuid";
+
+import { FaCog } from "react-icons/fa";
+import SettingsPanel from "../components/settingsPanel";
+import SearchModal from "../components/searchModal";
 
 //const title = "this is a title for content 1";
 
@@ -20,12 +25,28 @@ function Chatbot() {
   const [activeChatId, setActiveChatId] = useState(null);
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "dark";
+  });
+
+  useEffect(() => {
+    document.body.classList.remove("light-theme", "dark-theme");
+    document.body.classList.add(`${theme}-theme`);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
 
   // const [messages, setMessages] = useState([
   //   { role: "bot", text: "Hello! Ask me anything." },
   // ]);
   
   //const [title, setTitle] = useState("");
+
+
 
   
   
@@ -194,6 +215,32 @@ ${input}
   };
   return (
     <div className="flex h-screen w-screen">
+
+      {/* Floating Settings Button */}
+      <button
+        onClick={() => setSettingsOpen(true)}
+        className="absolute top-4 right-4 z-40 p-2 rounded-full bg-[var(--color-surface)] text-black hover:bg-yellow-300 shadow"
+        title="Settings"
+      >
+        <FaCog size={20} />
+      </button>
+
+      {settingsOpen && (
+      <SettingsPanel
+          onClose={() => setSettingsOpen(false)}
+          theme={theme}
+          setTheme={setTheme}
+        />
+      )}
+
+      {searchOpen && (
+      <SearchModal
+        chats={chats}
+        onSelectChat={setActiveChatId}
+        onClose={() => setSearchOpen(false)}
+      />
+      )}
+
       <Sidebar
         chats={chats}
         sidebarOpen={sidebarOpen}
@@ -203,6 +250,7 @@ ${input}
         onSelectChat={setActiveChatId}
         onDeleteChat={handleDeleteChat}
         onRenameChat={handleRenameChat}
+        setSearchOpen={setSearchOpen} 
     />
       <ChatArea
         messages={activeChat?.messages || []}

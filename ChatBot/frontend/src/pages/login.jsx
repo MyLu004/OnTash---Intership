@@ -25,7 +25,9 @@ function Login() {
 
     if (res.ok) {
       localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("userEmail", data.email);
       console.log("loggin successful, navigate to chat")
+      console.log("user email:", data.email)
       navigate("/chat");
     } else {
       alert("Login failed: " + data.detail);

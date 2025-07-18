@@ -31,6 +31,7 @@ class UserLogin(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    email: EmailStr
 
 class TokenData(BaseModel):
     id: Optional[int] | None = None  #id can be None if not provided, using union type for optional id

@@ -1,6 +1,9 @@
 import { FaBars, FaPlus } from "react-icons/fa";
 import ChatItem from "./chatItems";
 
+import { FaSearch } from "react-icons/fa";
+
+
 function Sidebar({
   sidebarOpen,
   toggleSidebar,
@@ -10,12 +13,13 @@ function Sidebar({
   onSelectChat,
   onDeleteChat,
   onRenameChat,
+  setSearchOpen,
 }) {
   return (
     <div
       className={`${
         sidebarOpen ? "w-60 items-start" : "w-20 sm:w-15 items-center"
-      } bg-[var(--color-accent)] transition-all duration-300 flex flex-col justify-start`}
+      } bg-[var(--color-accent)] transition-all duration-300 flex flex-col justify-start space-3`}
     >
       {/* Toggle Sidebar */}
       <button
@@ -27,16 +31,25 @@ function Sidebar({
 
       {/* Sidebar content */}
       {sidebarOpen && (
-        <div className="text-black mt-2 w-full py-3 space-y-4">
+        <div className=" text-black mt-2 w-full py-3 space-y-4 text-cente ">
           {/* New Chat Button */}
-          <div className="w-full px-3">
+          <div className="flex flex-col gap-2 px-3 w-full">
             <button
               onClick={onNewChat}
-              className="flex items-center gap-2 text-sm bg-white text-black font-semibold px-3 py-1 rounded-md hover:bg-yellow-200 transition w-full"
+              className="w-full flex items-center gap-2 text-sm bg-white text-black font-semibold px-3 py-2 rounded-md hover:bg-yellow-200 transition"
             >
               <FaPlus /> New Chat
             </button>
+
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="w-full flex items-center gap-2 text-sm bg-yellow-200 text-black font-semibold px-3 py-2 rounded-md hover:bg-yellow-300 transition"
+            >
+              <FaSearch /> Search chats
+            </button>
           </div>
+
+          
 
           {/* Chat List */}
           <div className="w-full flex flex-col px-1 space-y-1">
