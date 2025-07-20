@@ -22,6 +22,7 @@ function FileUpload({ onFileUpload }) {
         type="file"
         ref={fileInputRef}
         onChange={handleChange}
+        accept=".pdf,image/*"
         className="hidden"
       />
     </div>

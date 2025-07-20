@@ -27,7 +27,13 @@ function Chatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState(null);
 
+
+
+  const handleFileSelect = (file) => {
+    setPendingFile(file);  // Store for later use
+  };
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "dark";
@@ -47,20 +53,130 @@ function Chatbot() {
   //const [title, setTitle] = useState("");
 
 
+//   const appendMessageToActiveChat = (newMsg) => {
+//   setChats((prev) =>
+//     prev.map((chat) =>
+//       chat.id === activeChatId
+//         ? { ...chat, messages: [...chat.messages, newMsg] }
+//         : chat
+//     )
+//   );
+// };
+
+// const handleFileUpload = async (file) => {
+//   const formData = new FormData();
+//   formData.append("file", file);
+
+//   const accessToken = localStorage.getItem("accessToken");
+
+//   try {
+//     // Step 1: Upload the file to /upload
+//     const uploadRes = await fetch("http://localhost:8000/upload", {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       body: formData,
+//     });
+
+//     const uploadData = await uploadRes.json();
+//     console.log("File uploaded:", uploadData);
+
+//     // Step 2: Process file to extract text (/process)
+//     const processRes = await fetch("http://localhost:8000/process", {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       body: formData,
+//     });
+
+//     const processData = await processRes.json();
+//     const extractedText = processData.text;
+    
+
+//     //Appends a user message to chat:
+//     const userMessage = {
+//       role: "user",
+//       text: `Uploaded File: ${file.name}\n\n${extractedText}`,
+//     };
+
+//     // Step 3: Append user message to active chat
+//     setChats((prev) =>
+//       prev.map((chat) =>
+//         chat.id === activeChatId
+//           ? { ...chat, messages: [...chat.messages, userMessage] }
+//           : chat
+//       )
+//     );
+
+//     // Step 4 (optional): Auto-send extracted text to the model
+//     handleSend(null, extractedText); // update handleSend to accept custom input
+
+//   } catch (err) {
+//     console.error("File upload/process failed:", err);
+//   }
+// };
+
 
   
   
   // Load from localStorage on first mount
-  useEffect(() => {
-    const stored = localStorage.getItem("chats");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setChats(parsed);
-      setActiveChatId(parsed[0]?.id); // Load first chat
-    } else {
-      handleNewChat(); // Create one if empty
+  // useEffect(() => {
+  //   const stored = localStorage.getItem("chats");
+  //   if (stored) {
+  //     const parsed = JSON.parse(stored);
+  //     setChats(parsed);
+  //     setActiveChatId(parsed[0]?.id); // Load first chat
+  //   } else {
+  //     handleNewChat(); // Create one if empty
+  //   }
+  // }, []);
+
+useEffect(() => {
+  const fetchChats = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    try {
+      const res = await fetch("http://localhost:8000/chat/chats/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to fetch chats:", res.status, errorText);
+        setChats([]); //Set empty array to avoid crash
+        return;
+      }
+
+      const data = await res.json();
+      setChats(data);
+      setActiveChatId(data[0]?.id);
+    } catch (err) {
+      console.error("Error fetching chats:", err);
+      setChats([]); // fallback
     }
-  }, []);
+  };
+
+  fetchChats();
+}, []);
+
+
+const saveChatToServer = async (chat) => {
+  const token = localStorage.getItem("accessToken");
+  
+
+  await fetch("http://localhost:8000/chat/save", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(chat)
+  });
+};
 
   // Save to localStorage when chats change
   useEffect(() => {
@@ -107,70 +223,109 @@ const handleRenameChat = (chatId) => {
     }
   };
 
-  const activeChat = chats.find((c) => c.id === activeChatId);
+  const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : null;
 
+const generateTitle = async (prompt) => {
+  try {
+    const titlePrompt = `Generate a short, clear title for this user question:\n"${prompt}"\nReturn only the title.`;
+    const titleRes = await fetch("http://localhost:8000/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({
+        prompt: titlePrompt,
+        model: modelMap[selectedModel] || "llama3",
+      }),
+    });
 
-  const handleSend = async (e) => {
-  e.preventDefault();
-  if (!input.trim() || !activeChat) return;
+    const titleData = await titleRes.json();
+    const cleanTitle = titleData.response.trim().replace(/^["']|["']$/g, "");
+
+    setChats((prev) =>
+      prev.map((chat) =>
+        chat.id === activeChatId ? { ...chat, title: cleanTitle } : chat
+      )
+    );
+  } catch (err) {
+    console.error("Failed to generate title:", err);
+  }
+};
+
+const handleSend = async (e, overrideInput = null) => {
+  if (e) e.preventDefault();
+  const finalInput = overrideInput || input;
+  if (!finalInput.trim() && !pendingFile) return;
 
   setIsLoading(true);
 
-  const userMessage = { role: "user", text: input };
-  //setMessages((prev) => [...prev, userMessage]);
+  let extractedText = "";
 
-  // Update messages for current chat
-    setChats((prev) =>
-      prev.map((chat) =>
-        chat.id === activeChatId
-          ? { ...chat, messages: [...chat.messages, userMessage] }
-          : chat
-      )
-    );
-  
+  if (pendingFile) {
+    const formData = new FormData();
+    formData.append("file", pendingFile);
 
-  //retrieve access token
-  const accessToken = localStorage.getItem("accessToken"); 
-    // Generate title for first user input
+    const accessToken = localStorage.getItem("accessToken");
 
-  if (
-      activeChat.messages.length === 1 &&
-      activeChat.title === "New Chat"
-    ) {
-      try {
-        const titlePrompt = `Generate a short, clear title for this user question:\n"${input}"\nReturn only the title.`;
-        const titleRes = await fetch("http://localhost:8000/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            prompt: titlePrompt,
-            model: modelMap[selectedModel] || "llama3",
-          }),
-        });
+    try {
+      // Upload
+      await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: formData,
+      });
 
-        const titleData = await titleRes.json();
-        const cleanTitle = titleData.response.trim().replace(/^["']|["']$/g, "");
+      // Process
+      const processRes = await fetch("http://localhost:8000/process", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: formData,
+      });
 
-        setChats((prev) =>
-          prev.map((chat) =>
-            chat.id === activeChatId
-              ? { ...chat, title: cleanTitle }
-              : chat
-          )
-        );
-      } catch (err) {
-        console.error("Failed to generate title:", err);
-      }
+      const processData = await processRes.json();
+      extractedText = processData.text;
+    } catch (err) {
+      console.error("File processing failed:", err);
     }
+  }
 
-    // Send full prompt to bot
-    const structuredPrompt = `
+  // Build full prompt
+  const combinedInput = `${finalInput}\n\n${extractedText ? `---\nAttached document:\n${extractedText}` : ""}`;
+
+  const userMessage = { role: "user", text: finalInput };
+
+  setChats((prev) => {
+  const updated = prev.map((chat) =>
+    chat.id === activeChatId
+      ? { ...chat, messages: [...chat.messages, userMessage] }
+      : chat
+  );
+
+  const updatedChat = updated.find((c) => c.id === activeChatId);
+
+
+  if (updatedChat && updatedChat.messages.length === 2 && updatedChat.title === "New Chat") {
+    generateTitle(finalInput);  // move your fetch logic to a helper function
+  }
+
+  if (updatedChat) saveChatToServer(updatedChat); // call save inside this scope
+
+  return updated;
+});
+
+
+
+
+  const accessToken = localStorage.getItem("accessToken");
+
+  // Title generation for new chats
+ 
+
+  const structuredPrompt = `
 Respond in Markdown. Here is the user’s message:
 
-${input}
+${combinedInput}
 
 - Use **bold** for key terms
 - Use bullet points or numbered lists
@@ -179,40 +334,48 @@ ${input}
 - Use section headers with ###
 `;
 
-
-
   try {
-      const res = await fetch("http://localhost:8000/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          prompt: structuredPrompt,
-          model: modelMap[selectedModel] || "llama3",
-        }),
-      });
+  const res = await fetch("http://localhost:8000/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      prompt: structuredPrompt,
+      model: modelMap[selectedModel] || "llama3",
+    }),
+  });
 
-      const data = await res.json();
-      console.log("Bot response: ", data)
-      const botMessage = { role: "bot", text: data.response || "⚠️ No response from model." };
+  const data = await res.json();
+  const botMessage = { role: "bot", text: data.response || "⚠️ No response from model." };
 
-      // Append bot response
-      setChats((prev) =>
-        prev.map((chat) =>
-          chat.id === activeChatId
-            ? { ...chat, messages: [...chat.messages, botMessage] }
-            : chat
-        )
-      );
-    } catch (err) {
-      console.error("Error:", err);
-    }
+  setChats((prev) => {
+    const updatedChats = prev.map((chat) =>
+      chat.id === activeChatId
+        ? { ...chat, messages: [...chat.messages, botMessage] }
+        : chat
+    );
 
-    setInput("");
-    setIsLoading(false);
-  };
+    const updatedChat = updatedChats.find((c) => c.id === activeChatId);
+    if (updatedChat)  saveChatToServer(updatedChat); // ✅ Save latest chat to backend
+
+    return updatedChats;
+  });
+} catch (err) {
+  console.error("Error:", err);
+}
+
+  
+
+  // ✅ Reset input and file
+  setInput("");
+  setPendingFile(null);
+  setIsLoading(false);
+
+  
+};
+
   return (
     <div className="flex h-screen w-screen">
 
@@ -260,6 +423,10 @@ ${input}
         isLoading={isLoading}
         selectedModel={selectedModel}
         setSelectedModel={setSelectedModel}
+        handleFileUpload={handleFileSelect}
+        pendingFile={pendingFile}
+        setPendingFile={setPendingFile}
+
       />
     </div>
   );

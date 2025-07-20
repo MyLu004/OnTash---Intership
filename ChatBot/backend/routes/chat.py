@@ -3,9 +3,16 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import requests
-from .. import oauth2
+from .. import oauth2, models, schemas
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+
+from ..schemas import ChatCreate
+
+
+from ..database import get_db
+from typing import List
+
 
 router = APIRouter(
     prefix="/chat",
@@ -44,3 +51,27 @@ def chat_with_ollama(
 
     except requests.RequestException as e:
         raise HTTPException(status_code=500, detail="Failed to contact Ollama.")
+
+   
+@router.post("/save", status_code=201)
+def save_chat(
+    chat: ChatCreate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(oauth2.get_current_user_id)
+):
+    db_chat = models.Chat(title=chat.title, user_id=user_id)
+    db.add(db_chat)
+    db.commit()
+    db.refresh(db_chat)
+
+    for msg in chat.messages:
+        db_msg = models.Message(role=msg.role, text=msg.text, chat_id=db_chat.id)
+        db.add(db_msg)
+
+    db.commit()
+    return {"chat_id": db_chat.id}
+
+@router.get("/chats/")
+def get_chats(db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user_id)):
+    chats = db.query(models.Chat).filter(models.Chat.user_id == user_id).all()
+    return chats

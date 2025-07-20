@@ -36,3 +36,13 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: Optional[int] | None = None  #id can be None if not provided, using union type for optional id
     email: EmailStr | None = None  #email can also be None if not provided, using union type for optional email
+
+
+
+class MessageCreate(BaseModel):
+    role: str
+    text: str
+
+class ChatCreate(BaseModel):
+    title: str
+    messages: list[MessageCreate] = []

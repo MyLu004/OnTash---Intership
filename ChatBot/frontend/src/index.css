@@ -13,12 +13,12 @@
   background-color: #242424;
 
   /* Added custom variables */
-  /* --color-bg: #242424;
-  --color-text: rgba(255, 255, 255, 0.87);
-  --color-primary: #000000; */
-  /* --color-surface: #e5e5e5; */
-  /* --color-accent: #f5cb5c;
-  --color-accent-hover: #e0b43b; */
+  --color-bg-gen: #242424;
+  --color-text-gen: rgba(255, 255, 255, 0.87);
+  --color-primary-gen: #000000;
+  --color-surface-gen: #e5e5e5;
+  --color-accent-gen: #f5cb5c;
+  --color-accent-hover-gen: #e0b43b; 
   --font-base: 16px;
   --font-lg: 18px;
   --font-sm: 14px;

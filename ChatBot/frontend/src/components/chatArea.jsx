@@ -16,35 +16,37 @@ function parseMarkdown(text) {
   return DOMPurify.sanitize(marked(text));
 }
 
-function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedModel, setSelectedModel  }) {
+function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedModel, setSelectedModel,  handleFileUpload, pendingFile, setPendingFile,  }) {
   
   const bottomRef = useRef(null);
+
+  
   
   //const [selectedModel, setSelectedModel] = useState("");
   
   
 
-  const handleFileUpload = async (file) => {
-  const formData = new FormData();
-  formData.append("file", file);
+// const handleFileUpload = async (file) => {
+//   const formData = new FormData();
+//   formData.append("file", file);
 
-  const accessToken = localStorage.getItem("accessToken");
+//   const accessToken = localStorage.getItem("accessToken");
 
-  try {
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: formData,
-    });
+//   try {
+//     const res = await fetch("http://localhost:8000/upload", {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       body: formData,
+//     });
 
-    const data = await res.json();
-    console.log("Uploaded file info:", data);
-  } catch (err) {
-    console.error("Upload failed:", err);
-  }
-};
+//     const data = await res.json();
+//     console.log("Uploaded file info:", data);
+//   } catch (err) {
+//     console.error("Upload failed:", err);
+//   }
+// };
 
   useEffect(() => {
   if (bottomRef.current) {
@@ -89,6 +91,20 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
         onSubmit={handleSend}
         className="p-2 bg-[var(--color-surface)] flex items-center gap-1 text-black rounded-md"
       >
+
+        {pendingFile && (
+  <div className="text-black bg-white p-2 rounded-md mb-2 flex justify-between items-center">
+    <span className="text-sm font-medium truncate max-w-[200px]">{pendingFile.name}</span>
+        <button
+      type="button"
+      className="ml-2 text-red-600 text-sm hover:underline"
+      onClick={() => setPendingFile(null)} // clears the file correctly
+    >
+      Remove
+    </button>
+  </div>
+  )}
+
         <input
           type="text"
           placeholder="Type your message..."
@@ -97,6 +113,9 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
           disabled={isLoading}
           className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black font-bold"
         />
+
+
+
         <button
           type="submit"
           disabled={isLoading}

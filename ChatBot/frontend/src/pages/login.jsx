@@ -69,7 +69,7 @@ function Login() {
 
         <button
           type="submit"
-          className="w-full bg-[var(--color-accent)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover)] hover:text-black transition"
+          className="w-full bg-[var(--color-accent-gen)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover-gen)] hover:text-black transition"
         >
           Login
         </button>
@@ -77,7 +77,7 @@ function Login() {
         <button
           type="button"
           onClick={() => navigate("/signup")}
-          className="w-full border border-blue-600 py-2 rounded-lg hover:bg-[var(--color-surface)] hover:text-black transition"
+          className="w-full border border-blue-600 py-2 rounded-lg hover:bg-[var(--color-surface-gen)] hover:text-black transition"
         >
           Sign Up
         </button>

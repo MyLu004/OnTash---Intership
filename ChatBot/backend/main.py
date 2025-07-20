@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import models
 
 from .database import engine
-from .routes import user, auth, chat, upload
+from .routes import user, auth, chat, upload, process_file
 
 
 
@@ -35,6 +35,8 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(chat.router) 
 app.include_router(upload.router) 
+app.include_router(process_file.router)
+
 
 
 
