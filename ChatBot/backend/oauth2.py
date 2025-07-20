@@ -63,6 +63,8 @@ def get_current_user_id(token: str = Depends(oauth2_scheme),db: Session = Depend
     Raises:
         credentials_exception: If the token is invalid or expired.
     """
+
+    print("Access token received:", token)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -76,5 +78,5 @@ def get_current_user_id(token: str = Depends(oauth2_scheme),db: Session = Depend
         raise credentials_exception
     
     # If the user exists, return the token data
-    return user
+    return token.id
 
