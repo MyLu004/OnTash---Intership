@@ -87,7 +87,7 @@ function Signup() {
 
         <button
           type="submit"
-          className="w-full bg-[var(--color-accent)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover)] transition"
+          className="w-full bg-[var(--color-accent-gen)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover-gen)] transition"
         >
           Sign Up
         </button>

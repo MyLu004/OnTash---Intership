@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ChatArea from "../components/chatArea";
 // import Sidebar from "../components/sideBar";
-import Sidebar from "../components/sidebar";
+import Sidebar from "../components/sideBar";
 import { v4 as uuidv4 } from "uuid";
 
 import { FaCog } from "react-icons/fa";
