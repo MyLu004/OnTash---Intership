@@ -19,6 +19,10 @@ router = APIRouter(
     tags=["Chatbot"]
 )
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+
 class ChatRequest(BaseModel):
     prompt: str
     model: str = "llama3"
@@ -29,7 +33,7 @@ class ChatResponse(BaseModel):
 @router.post("/", response_model=ChatResponse)
 def chat_with_ollama(
     request: ChatRequest,
-    token: str = Depends(oauth2.oauth2_scheme)
+    token: str = Depends(oauth2_scheme)
 ):
     # TODO : fix the token authorization later
     # Verify token
@@ -57,9 +61,9 @@ def chat_with_ollama(
 def save_chat(
     chat: ChatCreate,
     db: Session = Depends(get_db),
-    user_id: int = Depends(oauth2.get_current_user_id)
+    user: models.User = Depends(oauth2.get_current_user)
 ):
-    db_chat = models.Chat(title=chat.title, user_id=user_id)
+    db_chat = models.Chat(title=chat.title, user_id=user.id)
     db.add(db_chat)
     db.commit()
     db.refresh(db_chat)
@@ -71,7 +75,14 @@ def save_chat(
     db.commit()
     return {"chat_id": db_chat.id}
 
-@router.get("/chats/")
-def get_chats(db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user_id)):
-    chats = db.query(models.Chat).filter(models.Chat.user_id == user_id).all()
-    return chats
+# @router.get("/chats/")
+# def get_chats(db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user)):
+#     chats = db.query(models.Chat).filter(models.Chat.user_id == user_id).all()
+#     return chats
+
+@router.get("/chats/", response_model=list[schemas.ChatOut])
+def get_chats(
+    db: Session = Depends(get_db),
+    user: models.User = Depends(oauth2.get_current_user)
+):
+    return db.query(models.Chat).filter(models.Chat.user_id == user.id).all()

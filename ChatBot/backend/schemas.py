@@ -46,3 +46,21 @@ class MessageCreate(BaseModel):
 class ChatCreate(BaseModel):
     title: str
     messages: list[MessageCreate] = []
+
+
+class MessageOut(BaseModel):
+    id: int
+    role: str
+    text: str
+
+    class Config:
+        orm_mode = True
+
+class ChatOut(BaseModel):
+    id: int
+    title: str
+    messages: list[MessageOut]  # include messages here
+
+    class Config:
+        orm_mode = True
+

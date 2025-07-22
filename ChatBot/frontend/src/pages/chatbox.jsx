@@ -151,9 +151,19 @@ useEffect(() => {
         return;
       }
 
+      // const data = await res.json();
+      // setChats(data);
+      // setActiveChatId(data[0]?.id);
+
       const data = await res.json();
-      setChats(data);
-      setActiveChatId(data[0]?.id);
+      const enriched = data.map(chat => ({
+        ...chat,
+        messages: chat.messages || [],  // Ensure messages array exists
+      }));
+      setChats(enriched);
+      setActiveChatId(enriched[0]?.id);
+
+
     } catch (err) {
       console.error("Error fetching chats:", err);
       setChats([]); // fallback
@@ -319,13 +329,21 @@ const handleSend = async (e, overrideInput = null) => {
 
   const accessToken = localStorage.getItem("accessToken");
 
-  // Title generation for new chats
+  
+
+  const activeChat = chats.find(c => c.id === activeChatId);
+
+const history = activeChat.messages
+  .map(msg => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.text}`)
+  .join("\n");
  
 
   const structuredPrompt = `
 Respond in Markdown. Here is the user’s message:
+  ${history}
 
-${combinedInput}
+
+New user input : ${combinedInput}
 
 - Use **bold** for key terms
 - Use bullet points or numbered lists
@@ -348,7 +366,7 @@ ${combinedInput}
   });
 
   const data = await res.json();
-  const botMessage = { role: "bot", text: data.response || "⚠️ No response from model." };
+  const botMessage = { role: "bot", text: data.response || "No response from model." };
 
   setChats((prev) => {
     const updatedChats = prev.map((chat) =>
@@ -358,7 +376,7 @@ ${combinedInput}
     );
 
     const updatedChat = updatedChats.find((c) => c.id === activeChatId);
-    if (updatedChat)  saveChatToServer(updatedChat); // ✅ Save latest chat to backend
+    if (updatedChat)  saveChatToServer(updatedChat); // Save latest chat to backend
 
     return updatedChats;
   });
@@ -368,7 +386,7 @@ ${combinedInput}
 
   
 
-  // ✅ Reset input and file
+  // Reset input and file
   setInput("");
   setPendingFile(null);
   setIsLoading(false);
