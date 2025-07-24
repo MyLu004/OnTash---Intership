@@ -44,95 +44,6 @@ function Chatbot() {
     document.body.classList.add(`${theme}-theme`);
     localStorage.setItem("theme", theme);
   }, [theme]);
-
-
-  // const [messages, setMessages] = useState([
-  //   { role: "bot", text: "Hello! Ask me anything." },
-  // ]);
-  
-  //const [title, setTitle] = useState("");
-
-
-//   const appendMessageToActiveChat = (newMsg) => {
-//   setChats((prev) =>
-//     prev.map((chat) =>
-//       chat.id === activeChatId
-//         ? { ...chat, messages: [...chat.messages, newMsg] }
-//         : chat
-//     )
-//   );
-// };
-
-// const handleFileUpload = async (file) => {
-//   const formData = new FormData();
-//   formData.append("file", file);
-
-//   const accessToken = localStorage.getItem("accessToken");
-
-//   try {
-//     // Step 1: Upload the file to /upload
-//     const uploadRes = await fetch("http://localhost:8000/upload", {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       body: formData,
-//     });
-
-//     const uploadData = await uploadRes.json();
-//     console.log("File uploaded:", uploadData);
-
-//     // Step 2: Process file to extract text (/process)
-//     const processRes = await fetch("http://localhost:8000/process", {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       body: formData,
-//     });
-
-//     const processData = await processRes.json();
-//     const extractedText = processData.text;
-    
-
-//     //Appends a user message to chat:
-//     const userMessage = {
-//       role: "user",
-//       text: `Uploaded File: ${file.name}\n\n${extractedText}`,
-//     };
-
-//     // Step 3: Append user message to active chat
-//     setChats((prev) =>
-//       prev.map((chat) =>
-//         chat.id === activeChatId
-//           ? { ...chat, messages: [...chat.messages, userMessage] }
-//           : chat
-//       )
-//     );
-
-//     // Step 4 (optional): Auto-send extracted text to the model
-//     handleSend(null, extractedText); // update handleSend to accept custom input
-
-//   } catch (err) {
-//     console.error("File upload/process failed:", err);
-//   }
-// };
-
-
-  
-  
-  // Load from localStorage on first mount
-  // useEffect(() => {
-  //   const stored = localStorage.getItem("chats");
-  //   if (stored) {
-  //     const parsed = JSON.parse(stored);
-  //     setChats(parsed);
-  //     setActiveChatId(parsed[0]?.id); // Load first chat
-  //   } else {
-  //     handleNewChat(); // Create one if empty
-  //   }
-  // }, []);
-
 useEffect(() => {
   const fetchChats = async () => {
     const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -151,10 +62,6 @@ useEffect(() => {
         setChats([]); //Set empty array to avoid crash
         return;
       }
-
-      // const data = await res.json();
-      // setChats(data);
-      // setActiveChatId(data[0]?.id);
 
       const data = await res.json();
       const enriched = data.map(chat => ({
