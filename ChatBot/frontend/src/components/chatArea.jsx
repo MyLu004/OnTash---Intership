@@ -1,69 +1,48 @@
-
-
 import {  useRef, useEffect } from "react";
-import ModelSelector from "../components/modelSelector"; // adjust path if needed
-import FileUpload from "../components/fileUpload"; // adjust path if needed
+import ModelSelector from "../components/modelSelector";
+import FileUpload from "../components/fileUpload"; 
 
+import { marked } from "marked";    // Converts Markdown to HTML
+import DOMPurify from "dompurify";  // Sanitizes HTML to prevent XSS
 
-import { marked } from "marked";
-import DOMPurify from "dompurify";
-
-//import { parseFormattedText } from "../utils/formatting";
-
-
+// Helper function to parse markdown text and sanitize it
 function parseMarkdown(text) {
   if (!text) return "";
-  return DOMPurify.sanitize(marked(text));
+  return DOMPurify.sanitize(marked(text)); // convert and clean user input
 }
 
-function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedModel, setSelectedModel,  handleFileUpload, pendingFile, setPendingFile,  }) {
+function ChatArea({  
+  messages,           // list of the chat message 
+  input,              // input filed state
+  setInput,           // function to update input
+  handleSend,         // function to handle message send
+  isLoading,          // boolean indicating if bot is processing
+  selectedModel,      // currently selected LLM model
+  setSelectedModel,   // Function to change model
+  handleFileUpload,   // Function to handle file uploads
+  pendingFile,        // Currently selected file (if any)
+  setPendingFile,     // Function to cler selected file
+}) {
   
-  const bottomRef = useRef(null);
+  const bottomRef = useRef(null); // reference to scroll to bottom
 
-  
-  
-  //const [selectedModel, setSelectedModel] = useState("");
-  
-  
-
-// const handleFileUpload = async (file) => {
-//   const formData = new FormData();
-//   formData.append("file", file);
-
-//   const accessToken = localStorage.getItem("accessToken");
-
-//   try {
-//     const res = await fetch("http://localhost:8000/upload", {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       body: formData,
-//     });
-
-//     const data = await res.json();
-//     console.log("Uploaded file info:", data);
-//   } catch (err) {
-//     console.error("Upload failed:", err);
-//   }
-// };
-
+  // scroll to bottm effect (scroll to bottol when chat reach the window limit)
   useEffect(() => {
   if (bottomRef.current) {
     bottomRef.current.scrollIntoView({ behavior: "smooth" });
   }
 }, [messages]);
 
-
   return (
     <div className="flex flex-col flex-1 bg-[var(--color-bg)] text-white p-10">
-
-      {/* Model Selector Dropdown */}
+      
+      {/* Dropdown to select model */}
       <ModelSelector
         selectedModel={selectedModel}
         setSelectedModel={setSelectedModel}
       />
 
+       {/* Message history area */}
       <div className="flex-1 overflow-y-auto p-6  space-y-4">
         {messages.map((msg, i) => (
           <div
@@ -73,16 +52,15 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
                 ? "bg-gray-300 text-black self-end ml-auto"
                 : "bg-[var(--color-accent)] text-black self-start mr-auto"
             }`}
-            //  dangerouslySetInnerHTML={{ __html: parseFormattedText(msg.text) }}
+            
           >
-            {/* {msg.text} */}
+            
             <div dangerouslySetInnerHTML={{ __html: parseMarkdown(msg.text) }} />
 
              
           </div>
         ))}
 
-        {/*  Invisible div that we scroll into view */}
         <div ref={bottomRef} />
 
       </div>
@@ -91,20 +69,21 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
         onSubmit={handleSend}
         className="p-2 bg-[var(--color-surface)] flex items-center gap-1 text-black rounded-md"
       >
-
+         {/* If a file is selected, show preview with remove option */}
         {pendingFile && (
-  <div className="text-black bg-white p-2 rounded-md mb-2 flex justify-between items-center">
-    <span className="text-sm font-medium truncate max-w-[200px]">{pendingFile.name}</span>
-        <button
-      type="button"
-      className="ml-2 text-red-600 text-sm hover:underline"
-      onClick={() => setPendingFile(null)} // clears the file correctly
-    >
-      Remove
-    </button>
-  </div>
-  )}
+          <div className="text-black bg-white p-2 rounded-md mb-2 flex justify-between items-center">
+            <span className="text-sm font-medium truncate max-w-[200px]">{pendingFile.name}</span>
+                <button
+              type="button"
+              className="ml-2 text-red-600 text-sm hover:underline"
+              onClick={() => setPendingFile(null)} // clears the file correctly
+            >
+              Remove
+            </button>
+          </div>
+        )}
 
+        {/* Text input field */}
         <input
           type="text"
           placeholder="Type your message..."
@@ -113,9 +92,8 @@ function ChatArea({  messages, input, setInput, handleSend, isLoading, selectedM
           disabled={isLoading}
           className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black font-bold"
         />
-
-
-
+        
+        {/* Submit button */}
         <button
           type="submit"
           disabled={isLoading}
