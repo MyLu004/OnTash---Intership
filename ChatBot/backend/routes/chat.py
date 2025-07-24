@@ -1,5 +1,4 @@
 # app/routes/chat.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import requests
@@ -12,6 +11,7 @@ from ..schemas import ChatCreate
 
 from ..database import get_db
 from typing import List
+
 
 
 router = APIRouter(

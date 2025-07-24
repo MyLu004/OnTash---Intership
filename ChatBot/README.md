@@ -112,7 +112,8 @@ chatbot/
 │   └── .gitignore
 
 ```
----
+  
+    
 
 
 
@@ -125,7 +126,7 @@ chatbot/
 |   Database           | SQLAlchemy, PostgresSQL, PgAdmin            | 
 
 
----
+
 ### ✨ Feature
 
 
@@ -170,7 +171,7 @@ Frontend displays response and updates chat history
 
 
 
----
+
 ## 📁 Frontend Structure ( ``` /frontend```)
 
 | File / Folder             | Description                              |
@@ -218,7 +219,7 @@ Frontend displays response and updates chat history
 - Database : PostgresSQL
 - Security Password : using `bcrypt` in `hashing.py`
 
----
+
 
 
 

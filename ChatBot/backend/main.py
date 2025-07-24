@@ -10,6 +10,8 @@ from .routes import user, auth, chat, upload, process_file
 
 
 
+
+
 models.Base.metadata.create_all(bind=engine) #create table 
 
 

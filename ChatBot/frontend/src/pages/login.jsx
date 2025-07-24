@@ -8,6 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,12 +25,24 @@ function Login() {
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem("accessToken", data.access_token);
+      
+      const token = data.access_token;
+
+      if (rememberMe) {
+
+      localStorage.setItem("accessToken", token); // persists after browser close
+    } else {
+      sessionStorage.setItem("accessToken", token); // clears on browser close
+    }
+
       localStorage.setItem("userEmail", data.email);
       console.log("loggin successful, navigate to chat")
       console.log("user email:", data.email)
-      navigate("/chat");
-    } else {
+      //navigate("/chat");
+      window.location.href = "/chat";
+    } 
+    
+    else {
       alert("Login failed: " + data.detail);
     }
   };
@@ -67,10 +80,20 @@ function Login() {
           required
         />
 
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
+          <span className="ml-2 text-sm">Remember me</span>
+        </label>
+
         <button
           type="submit"
           className="w-full bg-[var(--color-accent-gen)] text-black py-2 rounded-lg hover:bg-[var(--color-accent-hover-gen)] hover:text-black transition"
         >
+
           Login
         </button>
 

@@ -14,6 +14,10 @@ function SettingsPanel({ onClose, theme, setTheme }) {
     // Clear all auth/session info
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userEmail");
+    sessionStorage.removeItem("accessToken");
+
+    // Trigger logout event in all tabs
+    localStorage.setItem("logout", Date.now());
     // Optional: redirect to login page
     window.location.href = "/"; // change path to your login route
   };

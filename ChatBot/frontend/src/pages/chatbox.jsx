@@ -135,7 +135,8 @@ function Chatbot() {
 
 useEffect(() => {
   const fetchChats = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+
 
     try {
       const res = await fetch("http://localhost:8000/chat/chats/", {
@@ -171,6 +172,20 @@ useEffect(() => {
   };
 
   fetchChats();
+}, []);
+
+useEffect(() => {
+  const syncLogout = (event) => {
+    if (event.key === "logout") {
+      console.log("Logged out in another tab");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userEmail");
+      window.location.href = "/"; // or your login route
+    }
+  };
+
+  window.addEventListener("storage", syncLogout);
+  return () => window.removeEventListener("storage", syncLogout);
 }, []);
 
 
@@ -212,7 +227,7 @@ const saveChatToServer = async (chat) => {
     setInput("");
   };
 
-  const handleDeleteChat = (chatId) => {
+const handleDeleteChat = (chatId) => {
   const updated = chats.filter(c => c.id !== chatId);
   setChats(updated);
 
@@ -233,7 +248,7 @@ const handleRenameChat = (chatId) => {
     }
   };
 
-  const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : null;
+const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : null;
 
 const generateTitle = async (prompt) => {
   try {
