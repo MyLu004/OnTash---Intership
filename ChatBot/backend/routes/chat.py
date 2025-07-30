@@ -11,6 +11,7 @@ from ..schemas import ChatCreate
 from ..database import get_db
 from typing import List
 
+from ..evaluation.deepeval_utils import evaluate_response
 
 #define the router for /chat endpoint
 router = APIRouter(
@@ -40,7 +41,6 @@ def chat_with_ollama(
     request: ChatRequest,
     token: str = Depends(oauth2_scheme) #token required for accessing this route
 ):
-    
 
     try:
         # make a POST request to Ollama server with model and user prompt
@@ -50,16 +50,30 @@ def chat_with_ollama(
             "stream": False
         })
 
+
+
         # raise an error if the request to Ollama failed
         response.raise_for_status()
 
         # parse JSON response from Ollama
         ollama_response = response.json()
-        
+        model_reply = ollama_response["response"]
+
+        # evaluate with DeepEval for response relevance
+          # safe to import here too
+        relevance_score = evaluate_response(
+            user_input=request.prompt,
+            model_response=model_reply
+        )
+        print(f"Relevance Score: {relevance_score}")
         #print(f"Using model: {request.model}")
 
         # return the chatbot response as JSON
-        return {"response": ollama_response["response"]}
+        #return {"response": ollama_response["response"]}
+
+        # Return both response and score
+        return {"response": model_reply, "relevance_score": relevance_score}
+        
 
     except requests.RequestException as e:
         # return error if the Ollama not reachable

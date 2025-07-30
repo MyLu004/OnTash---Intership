@@ -44,7 +44,7 @@ def create_access_token(data: dict,  expires_delta=None):
     
     # encode the token with secret and algorithms
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
-    print("token create")
+    print("token create", encoded_jwt)
     return encoded_jwt
 
 # verify a JWT access token
@@ -60,6 +60,12 @@ def verify_access_token(token: str, credentials_exception):
     Returns:
         TokenData: Contains the decoded user ID from token.
     """
+
+    print(f"Access token: {token}")
+
+    if token is None or token == "null":
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+
     try:
         # decode the JWT token using secret and algorithms
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
@@ -73,6 +79,7 @@ def verify_access_token(token: str, credentials_exception):
 
     # if token is invalid or expired
     except JWTError as e:
+        print("JWTError:", e)
         raise credentials_exception
     
     return token_data  # Return the token data if verification is successful
@@ -98,6 +105,7 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(d
     )
 
     # verify and decode the token
+    print(f"Access token: {token}")
     token = verify_access_token(token, credentials_exception)
 
     # query the database to find the user associated with the token's ID

@@ -97,7 +97,13 @@ useEffect(() => {
 
 
 const saveChatToServer = async (chat) => {
-  const token = localStorage.getItem("accessToken");
+  //const token = localStorage.getItem("accessToken");
+
+  const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+  if (!token) {
+    console.error("No access token found. Abort fetch.");
+    return;
+  }
   
 
   await fetch("http://localhost:8000/chat/save", {
@@ -198,7 +204,13 @@ const handleSend = async (e, overrideInput = null) => {
     const formData = new FormData();
     formData.append("file", pendingFile);
 
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+
+    
+    if (!accessToken) {
+      console.error("No access token found. Cannot process file.");
+      return;}
+
 
     try {
       // Upload

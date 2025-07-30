@@ -26,7 +26,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # or ["*"] to allow all origins
+    allow_origins=["*"],  # or ["*"] to allow all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,4 +46,4 @@ app.include_router(process_file.router)
 def root():
 
     #the data get send back to the client
-    return {"message": "Hello World kinoko from FastAPI! :3"}
+    return {"message": "Hello World kinoko from Chatbot! :3"}

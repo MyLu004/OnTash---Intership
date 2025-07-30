@@ -36,10 +36,13 @@ function Login() {
     }
 
       localStorage.setItem("userEmail", data.email);
-      console.log("loggin successful, navigate to chat")
-      console.log("user email:", data.email)
+      // console.log("loggin successful, navigate to chat")
+      // console.log("user email:", data.email)
       //navigate("/chat");
-      window.location.href = "/chat";
+       // Delay navigation slightly to ensure storage
+      setTimeout(() => {
+        window.location.href = "/chat";
+      }, 100);
     } 
     
     else {
