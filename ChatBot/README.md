@@ -22,6 +22,47 @@ An interactive AI chatbot web applicaiton using LLMs (like Llama, GPT, Mistral) 
 - Docker (optional, for deployment)
 
 
+# 🌍 Secure Public Access via Cloudflare Tunnel (No Deployment Needed!)
+
+You can share the app securely **without deploying to a server** using [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install/).
+
+### ✅ Backend Setup
+1. Start FastAPI locally:
+   ```bash
+   uvicorn main:app --reload
+
+2. Open a Cloudfare tunnel
+    ```bash
+    cloudflared tunnel --url http://localhost:8000
+
+3. Copy the public URL (e.g. https://ceramic-loving-ahead-astronomy.trycloudflare.com) and set it as VITE_API_URL in your frontend .env.
+
+### ✅ Frontend Setup
+1. In `/frontend/vite.config.js`
+    ```js
+    export default defineConfig({
+    plugins: [react()],
+    server: {
+        host: true,
+        allowedHosts: 'all'
+    }
+    });
+
+2. Create `.env`
+    ```ini
+    VITE_API_URL=https://your-tunnel-url.trycloudflare.com
+
+3. Start React dev server:
+    ```bash
+    npm run dev
+
+4. Run tunnel for frontend
+    ```bash
+    cloudflared tunnel --url http://localhost:5173
+
+- Now your app is publicly available at 2 secutre links for backend + frontend
+
+
 ## 🚀 Deployment
 Note: you can deploy the full-stack chatbot either using **Docker** (recommended) or manually on your local machine
 
@@ -168,10 +209,6 @@ Frontend displays response and updates chat history
 
 
 
-
-
-
-
 ## 📁 Frontend Structure ( ``` /frontend```)
 
 | File / Folder             | Description                              |
@@ -219,13 +256,37 @@ Frontend displays response and updates chat history
 - Database : PostgresSQL
 - Security Password : using `bcrypt` in `hashing.py`
 
+### Evaluate Chatbot Accuracy with DeepEval
+- Using DeepEval to measure repsonse quality using metrics like Answer Relevancym Faithfulness and Toxicity
+``` python
+from deepeval.metrics import AnswerRelevancyMetric
+from deepeval.test_case import LLMTestCase
+from deepeval.evaluator import evaluate
 
+test_case = LLMTestCase(
+    input="How do I apply to NASA internships?",
+    actual_output="You can visit intern.nasa.gov to apply...",
+    expected_output="Visit intern.nasa.gov for internship info."
+)
 
+evaluate(
+    [test_case],
+    [AnswerRelevancyMetric(threshold=0.7)]
+)
 
+```
+
+#### Result Sample:
+```yami
+Answer Relevancy: score = 0.92
+Faithfulness: score = 0.87
+```
 
 
 ## 📚 What I Learned
  - **LLM Integration** : Integrated multiple large language model (LLMs) such as GPT, Mistral, Llama. Using Ollama to pull the model in local enviroment, and set up the REST API to send the request back and forth to the applicaiton
+ - Cloudflare Tunnel :  Exposed full-stack app securely with no external server
+ - Evaluation : Used DeepEval to validate and tune LLM resposnes for accuracy
  - **Structured Chat History** : desinged and maintained a conversation flow that supports contextual memory, allowing past messages to influence new replies using strucutre JSON message histories
  - **Implementing File Upload** : added support feature for file upload, enabling users to uplad documents or images as part of the conversation context
  -** API Request Handling **: Engineered a clean, modular approach to sending chat requests, model switching, and error handling on both the frontend and backend using FastAPI and React.

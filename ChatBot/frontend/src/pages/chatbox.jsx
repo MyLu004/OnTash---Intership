@@ -50,7 +50,8 @@ useEffect(() => {
 
 
     try {
-      const res = await fetch("http://localhost:8000/chat/chats/", {
+      //const res = await fetch("http://localhost:8000/chat/chats/", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/chat/chats`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -106,7 +107,8 @@ const saveChatToServer = async (chat) => {
   }
   
 
-  await fetch("http://localhost:8000/chat/save", {
+  //await fetch("http://localhost:8000/chat/save", {
+  await fetch(`${import.meta.env.VITE_API_URL}/chat/save`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -166,7 +168,8 @@ const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatI
 const generateTitle = async (prompt) => {
   try {
     const titlePrompt = `Generate a short, clear title for this user question:\n"${prompt}"\nReturn only the title.`;
-    const titleRes = await fetch("http://localhost:8000/chat", {
+    //const titleRes = await fetch("http://localhost:8000/chat", {
+    const titleRes = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -214,14 +217,16 @@ const handleSend = async (e, overrideInput = null) => {
 
     try {
       // Upload
-      await fetch("http://localhost:8000/upload", {
+      //await fetch("http://localhost:8000/upload", {
+       await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: "POST",
         headers: { Authorization: `Bearer ${accessToken}` },
         body: formData,
       });
 
       // Process
-      const processRes = await fetch("http://localhost:8000/process", {
+      //const processRes = await fetch("http://localhost:8000/process", {
+      const processRes = await fetch(`${import.meta.env.VITE_API_URL}/process`, {
         method: "POST",
         headers: { Authorization: `Bearer ${accessToken}` },
         body: formData,
@@ -287,7 +292,8 @@ New user input : ${combinedInput}
 `;
 
   try {
-  const res = await fetch("http://localhost:8000/chat", {
+  //const res = await fetch("http://localhost:8000/chat", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
