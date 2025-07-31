@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from .database import engine, Base
+from database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import models
+import models
 
-from .database import engine
-from .routes import user, auth, chat, upload, process_file
+from database import engine
+from routes import user, auth, chat, upload, process_file
 
 
 
