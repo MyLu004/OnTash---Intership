@@ -81,6 +81,7 @@ docker-compose up --build
     - Backend : `http://localhost:8000/docs`
 
 
+
 ### 🧑‍💻 Option 2 : Manual Local Setup
  - Backend(FastAPI)
     ```
@@ -99,6 +100,35 @@ docker-compose up --build
     npm run dev
     ```
     - The frontend runs at : `http://localhost:5173`
+
+
+### .evn file example
+
+- for frondend
+``` env
+# for cloudflare tunnel
+VITE_API_URL=https://needs-wifi-that-stan.trycloudflare.com   
+
+# for docker deployment
+# VITE_API_URL=http://localhost:3000
+```
+
+- for backend
+```
+# === PostgreSQL Database Config ===
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD= your_pass
+DB_NAME= your_DB_name
+
+DATABASE_URL=postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}
+
+# === JWT Config ===
+JWT_SECRET= your_secret_key
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=300
+```
 
 ## 📁 Project Structure
 ```

@@ -4,7 +4,7 @@ import models, schemas
 
 #from ..utils.hasing import hash_password, verify_password
 
-from utils import hasing
+from utils import hashing
 
 
 
@@ -43,7 +43,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     print("here!")
     #hashing the password
-    hashed_password = hasing.hash_password(user.password)  #hash the password using bcrypt
+    hashed_password = hashing.hash_password(user.password)  #hash the password using bcrypt
     user.password = hashed_password 
     
     new_user = models.User(**user.dict())

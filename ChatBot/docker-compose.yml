@@ -5,9 +5,9 @@ services:
     image: postgres:14
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2004
+      POSTGRES_DB: KinokoChatbot
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -16,7 +16,7 @@ services:
   backend:
     build: ./backend
     environment:
-      - DATABASE_URL=postgresql://${DB_USER}:{DB_PASSWORD}@db:5432/{DB_NAME}
+      - DATABASE_URL=postgresql://postgres:2004@db:5432/KinokoChatbot
     depends_on:
       - db
     ports:

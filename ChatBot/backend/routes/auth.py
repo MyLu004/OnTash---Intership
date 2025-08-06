@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 #import database and other utils for authencation 
 from database import get_db
 import models, schemas, oauth2
-from utils import hasing
+from utils import hashing
 
 #create routes instance for authentication related routes
 router = APIRouter(
@@ -48,7 +48,7 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends() ,db:Session = 
         )
     
     #if the password does not match the hashed password in the database, raise 403 error
-    if not hasing.verify_password(user_credentials.password, user.password):
+    if not hashing.verify_password(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid credentials"

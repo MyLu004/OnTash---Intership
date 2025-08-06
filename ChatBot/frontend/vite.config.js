@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [tailwindcss(),react()],
   server: {
     host: true,
-    allowedHosts: ['trader-wallace-quite-nor.trycloudflare.com'], // ← 👈 your tunnel URL
+    allowedHosts: ['website-amateur-representation-saver.trycloudflare.com'], // ← your tunnel URL
   },
 })
