@@ -110,7 +110,7 @@ docker-compose up --build
 VITE_API_URL=https://needs-wifi-that-stan.trycloudflare.com   
 
 # for docker deployment
-# VITE_API_URL=http://localhost:3000
+# VITE_API_URL=http://localhost:8000
 ```
 
 - for backend
